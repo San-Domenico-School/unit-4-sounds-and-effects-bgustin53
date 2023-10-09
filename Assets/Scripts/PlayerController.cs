@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip jumpSound, crashSound;
 
     private Animator playerAnimator;
+    private AudioSource playerAudio;
     private Rigidbody playerRb;
     private bool isOnGround;
     public bool gameOver { get; private set; }

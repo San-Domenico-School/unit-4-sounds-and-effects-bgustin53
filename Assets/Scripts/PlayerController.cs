@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
             playerAnimator.SetTrigger("Jump_trig");
             dirtParticle.Stop();
             playerAudio.PlayOneShot(jumpSound, 2.0f);
-            GameManager.AddToScore();
+           
         }
     }
 
@@ -57,5 +57,13 @@ public class PlayerController : MonoBehaviour
             playerAudio.PlayOneShot(crashSound, 1.0f);
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Points"))
+        {
+            GameManager.AddToScore();
+        }
     }
 }

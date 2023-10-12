@@ -11,29 +11,12 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreboardText;  //Reference to the Scoreboard TextMeshProUGUI GameObject
-    private static float score;                                      //Player's current score
-    private static int penalty = 10;                                 //Penalty for running into an obstacle
+    private static float score;                               //Player's current score
+    private static int collectible;                           //Player's current score
 
     private void Update()
     {
         DisplayScore();
-    }
-
-    //Inputs horizontal axis value received from the playerController script to an exponential
-    //function whose values range from 0.00 to 0.10.  
-    public static void AddToScore()
-    {
-        //float exponentialScale = Mathf.Pow(axisInput, 2) * 0.10f;
-        score++;
-    }
-
-    // If score is positive, decrements score when the player runs into an obstacle.
-    public static void SubtractFromScore()
-    {
-        if (score > 0)
-        {
-            score -= penalty;
-        }
     }
 
     // Displays rounded score to UI by updating scoreboardText
@@ -41,5 +24,13 @@ public class GameManager : MonoBehaviour
     {
         int roundedScore = Mathf.RoundToInt(score);
         scoreboardText.text = "Score: " + roundedScore.ToString();
+    }
+
+    //Inputs horizontal axis value received from the playerController script to an exponential
+    //function whose values range from 0.00 to 0.10.  
+    public static void ChangeScore(int change)
+    {
+        //float exponentialScale = Mathf.Pow(axisInput, 2) * 0.10f;
+        score += change;
     }
 }

@@ -94,8 +94,8 @@ GameObject:
   - component: {fileID: 1881187909424192647}
   - component: {fileID: 785130861023631391}
   m_Layer: 0
-  m_Name: Score
-  m_TagString: Points
+  m_Name: Scoreable
+  m_TagString: Scoreable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

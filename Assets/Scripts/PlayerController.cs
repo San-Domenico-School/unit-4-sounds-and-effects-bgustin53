@@ -39,6 +39,36 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Called when left mouse button is clicked
+    private void OnFire(InputValue input)
+    {
+        // Perform a raycast from the camera to the click position
+        Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            // Check if the clicked object is this object and have a specific tag
+            if (hit.collider.gameObject == gameObject)
+            {
+                string otherTag = hit.collider.gameObject.tag;
+                switch (otherTag)
+                {
+                    case "Player":
+                        GameManager.ChangeScore(-10);   //Subtracts 10 from the score
+                        break;
+                    case "Collectable":
+                        GameManager.ChangeScore(3);     //Adds 3 to the score
+                        break;
+                    case "Powerup":
+                        jumpForce *= 2;                 //Gives player super jump power
+                        Invoke("Powerup", 3);           //But only for 3 seconds
+                        break;
+                }
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "Ground" && !gameOver)
@@ -65,9 +95,14 @@ public class PlayerController : MonoBehaviour
 
         switch(otherTag)
         {
-            case "Points": GameManager.AddToScore();
+            case "Scoreable": GameManager.ChangeScore(1); ;
             break;
         }
 
+    }
+
+    private void Powerup()
+    {
+        jumpForce *= 0.5f;
     }
 }

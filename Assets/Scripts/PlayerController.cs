@@ -61,9 +61,13 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Points"))
+        string otherTag = other.gameObject.tag;
+
+        switch(otherTag)
         {
-            GameManager.AddToScore();
+            case "Points": GameManager.AddToScore();
+            break;
         }
+
     }
 }

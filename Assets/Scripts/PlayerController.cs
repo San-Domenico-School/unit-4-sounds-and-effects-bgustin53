@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
             playerAnimator.SetTrigger("Jump_trig");
             dirtParticle.Stop();
             playerAudio.PlayOneShot(jumpSound, 2.0f);
+            GameManager.AddToScore();
         }
     }
 
@@ -55,5 +56,6 @@ public class PlayerController : MonoBehaviour
             dirtParticle.Stop();
             playerAudio.PlayOneShot(crashSound, 1.0f);
         }
+
     }
 }

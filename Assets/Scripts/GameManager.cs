@@ -3,34 +3,81 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-/******************************************************
-* This class is a component of the Scorekeeper GameObject
-* and is designed to keeps track of and display the 
-* score for the game
-******************************************************/
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI scoreboardText;  //Reference to the Scoreboard TextMeshProUGUI GameObject
-    private static float score;                               //Player's current score
-    private static int collectible;                           //Player's current score
+    [SerializeField] private TextMeshProUGUI scoreboardText;
+    [SerializeField] private TextMeshProUGUI timeRemainingText;
+    [SerializeField] private GameObject toggleGroup;
+    [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject spawnManager;
+    [SerializeField] private Animator playerAnimator;
+    [SerializeField] private ParticleSystem dirtSplatter;
 
-    private void Update()
+    public static bool gameOver = true;
+    private static float score;
+    private int timeRemaining = 60;
+    private bool timedGame;
+
+    // Update is called once per frame
+    void Update()
     {
-        DisplayScore();
+        DisplayUI();
     }
 
-    // Displays rounded score to UI by updating scoreboardText
-    public void DisplayScore()
+    private void DisplayUI()
     {
-        int roundedScore = Mathf.RoundToInt(score);
-        scoreboardText.text = "Score: " + roundedScore.ToString();
+        scoreboardText.text = "Score: " + Mathf.RoundToInt(score).ToString();
+        if(timedGame)
+        {
+            if(timeRemaining == 0)
+            {
+                timeRemainingText.text = "Game\nOver";
+            }
+            else
+            {
+                timeRemainingText.text = timeRemaining.ToString();
+            }
+        }
     }
 
-    //Inputs horizontal axis value received from the playerController script to an exponential
-    //function whose values range from 0.00 to 0.10.  
-    public static void ChangeScore(int change)
+    private void TimeCountdown()
     {
-        //float exponentialScale = Mathf.Pow(axisInput, 2) * 0.10f;
-        score += change;
+        timeRemaining--;
+        if (gameOver || timeRemaining == 0)
+        {
+            gameOver = true;
+            playerAnimator.SetFloat("Speed_f", 0);
+            playerAnimator.SetBool("BeginGame_b", false);
+            CancelInvoke();
+        }
+
     }
+
+    public void StartGame()
+    {
+        toggleGroup.SetActive(false);
+        startButton.SetActive(false);
+        if(timedGame)
+        {
+            timeRemainingText.gameObject.SetActive(true);
+            InvokeRepeating("TimeCountdown", 1, 1);
+        }
+        gameOver = false;
+        spawnManager.SetActive(true);
+        playerAnimator.SetBool("BeginGame_b", true);
+        dirtSplatter.Play();
+    }
+
+    public void SetTimed(bool timed)
+    {
+        timedGame = timed;
+    }
+
+    public static void ChangeScore(int changed)
+    {
+        score += changed;
+    }
+
+
+
 }

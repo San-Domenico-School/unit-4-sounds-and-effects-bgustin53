@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAudio;
     private Rigidbody playerRb;
     private bool isOnGround;
-    public bool gameOver { get; private set; }
  
 
     // Start is called before the first frame update
@@ -28,7 +27,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnJump(InputValue input)
     {
-        if (isOnGround && !gameOver)
+        if (isOnGround && !GameManager.gameOver)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isOnGround = false;
@@ -55,10 +54,10 @@ public class PlayerController : MonoBehaviour
                 switch (otherTag)
                 {
                     case "Player":
-                        GameManager.ChangeScore(-10);   //Subtracts 10 from the score
+                        //GameManager.ChangeScore(-10);   //Subtracts 10 from the score
                         break;
                     case "Collectable":
-                        GameManager.ChangeScore(3);     //Adds 3 to the score
+                        //GameManager.ChangeScore(3);     //Adds 3 to the score
                         break;
                     case "Powerup":
                         jumpForce *= 2;                 //Gives player super jump power
@@ -71,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Ground" && !gameOver)
+        if (collision.gameObject.name == "Ground" && !GameManager.gameOver)
         {
             isOnGround = true;
             dirtParticle.Play();
@@ -79,7 +78,7 @@ public class PlayerController : MonoBehaviour
 
         else if(collision.gameObject.CompareTag("Obstacle"))
         {
-            gameOver = true;
+            GameManager.gameOver = true;
             playerAnimator.SetBool("Death_b", true);
             playerAnimator.SetInteger("DeathType_int", 1);
             explosionParticle.Play();
@@ -91,15 +90,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        string otherTag = other.gameObject.tag;
-
-        switch(otherTag)
+        if(other.gameObject.tag == "Scoreable")
         {
-            case "Scoreable": GameManager.ChangeScore(1); ;
-            break;
+            GameManager.ChangeScore(1);
         }
 
     }
+
+
 
     private void Powerup()
     {

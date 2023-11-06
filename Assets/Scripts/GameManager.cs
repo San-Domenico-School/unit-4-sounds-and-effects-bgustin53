@@ -14,14 +14,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ParticleSystem dirtSplatter;
 
     public static bool gameOver = true;
+    private AudioSource audioSource;
     private static float score;
-    private int timeRemaining = 60;
+    private int timeRemaining = 5;
     private bool timedGame;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         DisplayUI();
+        EndGame();
     }
 
     private void DisplayUI()
@@ -43,18 +51,11 @@ public class GameManager : MonoBehaviour
     private void TimeCountdown()
     {
         timeRemaining--;
-        if (gameOver || timeRemaining == 0)
-        {
-            gameOver = true;
-            playerAnimator.SetFloat("Speed_f", 0);
-            playerAnimator.SetBool("BeginGame_b", false);
-            CancelInvoke();
-        }
-
     }
 
     public void StartGame()
     {
+        audioSource.Play();
         toggleGroup.SetActive(false);
         startButton.SetActive(false);
         if(timedGame)
@@ -64,8 +65,22 @@ public class GameManager : MonoBehaviour
         }
         gameOver = false;
         spawnManager.SetActive(true);
+        playerAnimator.SetFloat("Speed_f", 1.0f);
         playerAnimator.SetBool("BeginGame_b", true);
         dirtSplatter.Play();
+    }
+
+    public void EndGame()
+    {
+        if (gameOver || timeRemaining == 0)
+        {
+            gameOver = true;
+            playerAnimator.SetFloat("Speed_f", 0);
+            playerAnimator.SetBool("BeginGame_b", false);
+            audioSource.Stop();
+            CancelInvoke();
+        }
+
     }
 
     public void SetTimed(bool timed)

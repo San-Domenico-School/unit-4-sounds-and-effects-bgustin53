@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     public static bool gameOver = true;
     private AudioSource audioSource;
     private static float score;
-    private int timeRemaining = 5;
+    private int timeRemaining = 60;
     private bool timedGame;
 
     private void Start()
